@@ -1,0 +1,17 @@
+# Directory meant for developer builds.
+/build
+
+# Autotools clutter.
+/autom4te.cache/
+/Makefile.in
+/aclocal.m4
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+/config.h.in
+/config.h.in~
+/config.guess
+/config.sub
+/ltmain.sh
