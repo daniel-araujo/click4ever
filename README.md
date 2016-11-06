@@ -18,7 +18,13 @@ me
 
 ## Installation
 
-Simply run the following commands:
+**Note**: If you have a clean state of the source repository you will need to
+prepare the build tools before you can start the installation process by
+running the following command:
+
+	$ autoreconf -i
+
+A normal installation requires running these 3 commands:
 
 	$ ./configure
 
@@ -26,15 +32,16 @@ Simply run the following commands:
 
 	$ make install
 
-The first command will check if your system has the needed functionalities
-available for this to work. If it reports that something is missing, you most
-likely just need to install something on your system. The second command will
-compile the program. The third and last one will install the program on your
-system. You will probably need higher privileges to install something on the
-system.
+The first one will check if your system has the needed functionalities
+available for the program to work and set up a suitable build system. The
+second one will compile the program. The third and last one will install the
+program on your system.
+
+If it fails to build on your system feel free to report as a bug. Read the
+Contributing section for how to do it.
 
 To change how the program is compiled and installed, see the options you have
-available by running `./configure -h`.
+available for the first command by running `./configure -h`.
 
 
 ## Contributing
