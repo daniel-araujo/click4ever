@@ -9,7 +9,11 @@ You start by running the following command:
 
 	$ click4ever
 
-Now the program is waiting for you to make the first click. After clicking, it will start dispatching mouse clicks in succession forever until you move the mouse away.
+Now the program is waiting for you to make the first click. After clicking, it
+will start dispatching mouse clicks quickly in succession until you move away.
+
+I like to assign a hotkey (ex: CTRL+C) that automatically runs the command for
+me
 
 
 ## Installation
