@@ -48,7 +48,7 @@ available for the first command by running `./configure -h`.
 ## Contributing
 
 Found a bug or want to contribute code? Feel free to create an issue or send a
-pull request on GitLab [[1]].
+pull request on GitHub [[1]].
 
 
 ## License
@@ -62,4 +62,4 @@ This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-[1]: https://gitlab.com/daniel-araujo/click4ever
+[1]: https://github.com/daniel-araujo/click4ever
