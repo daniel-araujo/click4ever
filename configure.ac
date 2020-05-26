@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([click4ever], [1.0.1])
+AC_INIT([click4ever], [1.0.2])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 AC_CONFIG_SRCDIR([src/click4ever.c])
