@@ -37,7 +37,7 @@ int main(void)
 
 	// We got a click so let's get the coordinates of the mouse. This will
 	// be the position where we're going to dispatch mouse clicks.
-	xdo_get_mouse_location(xdo, &before.x, &before.x, &ignore_int);
+	xdo_get_mouse_location(xdo, &before.x, &before.y, &ignore_int);
 
 	// Begin the process of dispatching mouse clicks quickly in succession.
 	for (;;) {
@@ -49,7 +49,7 @@ int main(void)
 		usleep(50 * 1000);
 
 		// Check the mouse position again to see if it has moved away.
-		xdo_get_mouse_location(xdo, &after.x, &after.x, &ignore_int);
+		xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
 
 		if (before.x != after.x || before.y != after.y) {
 			// The mouse moved away so that's our queue to stop.
