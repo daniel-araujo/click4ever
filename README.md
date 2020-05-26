@@ -20,6 +20,16 @@ example) to run the program for you.
 
 ## Installation
 
+### Arch Linux
+
+You can find it in the AUR
+
+```
+https://aur.archlinux.org/packages/click4ever/
+```
+
+### Source
+
 You will need to have `xdotool` installed.
 
 **Note**: If you have a clean state of the source repository you will need to
