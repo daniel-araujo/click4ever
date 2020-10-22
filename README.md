@@ -1,7 +1,7 @@
 # click4ever
 
-An auto clicker for Linux running X11. This program will generate potentially
-thousands of clicks per second at where your mouse cursor is.
+An auto clicker for Linux running X11. Automatically generates many clicks per
+second.
 
 
 ## Usage
