@@ -30,7 +30,7 @@ https://aur.archlinux.org/packages/click4ever/
 
 ### Source
 
-You will need to have `xdotool` installed.
+You will need to have `cmake` and `xdotool` installed.
 
 You can compile and install this program with the following commands:
 
