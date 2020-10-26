@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(click4ever VERSION 1.0.2)
+project(click4ever VERSION 1.0.3)
 
 add_executable(click4ever src/click4ever.c)
 
