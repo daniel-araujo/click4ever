@@ -11,6 +11,13 @@
 const uint64_t delay = 50;
 
 /*
+ * How often to check for mouse position changes. This is a costly operation
+ * and in many cases is not important to be checked as often as clicking is.
+ * It's in milliseconds.
+ */
+const uint64_t position_check_time = 500;
+
+/*
  * Current time in milliseconds.
  */
 static inline uint64_t millis()
@@ -56,12 +63,16 @@ int main(void)
 	// be the position where we're going to dispatch mouse clicks.
 	xdo_get_mouse_location(xdo, &before.x, &before.y, &ignore_int);
 
+	// Counts how many milliseconds have passed since the last time the
+	// mouse position was checked.
+	double position_check_counter = 0;
+
 	// Begin the process of dispatching mouse clicks quickly in succession.
 	for (;;) {
 		uint64_t begin = millis();
 
 		// Checks mouse position.
-		{
+		if (position_check_counter > position_check_time) {
 			xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
 
 			if (before.x != after.x || before.y != after.y) {
@@ -88,6 +99,7 @@ int main(void)
 		}
 
 		uint64_t total_time = millis() - begin;
+		position_check_counter += total_time;
 	}
 
 	// Disconnect from the display.
