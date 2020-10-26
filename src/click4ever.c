@@ -1,7 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include <unistd.h>
 #include <xdo.h>
+#include <time.h>
+
+/*
+ * Delay between clicks in milliseconds.
+ */
+const uint64_t delay = 50;
+
+/*
+ * Current time in milliseconds.
+ */
+static inline uint64_t millis()
+{
+	struct timespec now;
+	clock_gettime(CLOCK_REALTIME, &now);
+	return ((uint64_t) now.tv_sec) * 1000 + ((uint64_t) now.tv_nsec) / 1000000;
+}
 
 /*
  * This is a program that lets the user choose a position on the screen where
@@ -41,20 +58,36 @@ int main(void)
 
 	// Begin the process of dispatching mouse clicks quickly in succession.
 	for (;;) {
-		// Perform a mouse click.
-		xdo_click_window(xdo, CURRENTWINDOW, 1);
+		uint64_t begin = millis();
 
-		// This places a (small) delay between mouse clicks so that the
-		// system won't be overloaded.
-		usleep(50 * 1000);
+		// Checks mouse position.
+		{
+			xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
 
-		// Check the mouse position again to see if it has moved away.
-		xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
-
-		if (before.x != after.x || before.y != after.y) {
-			// The mouse moved away so that's our queue to stop.
-			break;
+			if (before.x != after.x || before.y != after.y) {
+				// The mouse moved away so that's our queue to stop.
+				break;
+			}
 		}
+
+		// Performs mouse click.
+		{
+			xdo_click_window(xdo, CURRENTWINDOW, 1);
+		}
+
+		uint64_t execution_time = millis() - begin;
+
+		// Delay
+		{
+			if (execution_time < delay) {
+				uint64_t remaining_time = delay - execution_time;
+				usleep(remaining_time * 1000);
+			} else {
+				// No need to sleep.
+			}
+		}
+
+		uint64_t total_time = millis() - begin;
 	}
 
 	// Disconnect from the display.

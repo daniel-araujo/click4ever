@@ -10,6 +10,10 @@ include(CheckSymbolExists)
 
 find_file("stdlib header" "stdlib.h")
 
+find_file("inttypes header" "inttypes.h")
+
+find_file("time header" "time.h")
+
 find_file("xdo header" "xdo.h")
 find_library("xdo library" xdo REQUIRED)
 
