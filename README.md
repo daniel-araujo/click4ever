@@ -32,26 +32,15 @@ https://aur.archlinux.org/packages/click4ever/
 
 You will need to have `xdotool` installed.
 
-**Note**: If you have a clean state of the source repository you will need to
-run autoreconf beforehand:
+You can compile and install this program with the following commands:
 
-	$ autoreconf -i
+	$ mkdir build
 
+	$ cd build
 
-You can compile and install this program with these 3 commands:
-
-	$ ./configure
-
-	$ make
+	$ cmake --config Release ..
 
 	$ make install
-
-The first command will check if your system can actually compile and run the
-program and then sets up a suitable build system. The second one compiles the
-program. The third and last one will install the program on your system.
-
-Check the output of `./configure -h` to see how you can change install and
-compile options.
 
 
 ## Contributing
