@@ -1,38 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <inttypes.h>
-#include <unistd.h>
+
+#include <boost/program_options.hpp>
+
+extern "C" {
 #include <xdo.h>
-#include <time.h>
-
-/*
- * Delay between clicks in milliseconds.
- */
-const uint64_t delay = 50;
-
-/*
- * How often to check for mouse position changes. This is a costly operation
- * and in many cases is not important to be checked as often as clicking is.
- * It's in milliseconds.
- */
-const uint64_t position_check_time = 500;
-
-/*
- * Current time in milliseconds.
- */
-static inline uint64_t millis()
-{
-	struct timespec now;
-	clock_gettime(CLOCK_REALTIME, &now);
-	return ((uint64_t) now.tv_sec) * 1000 + ((uint64_t) now.tv_nsec) / 1000000;
 }
 
-/*
- * This is a program that lets the user choose a position on the screen where
- * mouse clicks will be generated quickly in succession until the mouse is
- * moved away.
- */
-int main(void)
+#include "time_utils.hpp"
+
+int click(int button, uint64_t delay, uint64_t position_check_time)
 {
 	// Variables used as output parameters whose values we're not
 	// interested in.
@@ -83,7 +60,7 @@ int main(void)
 
 		// Performs mouse click.
 		{
-			xdo_click_window(xdo, CURRENTWINDOW, 1);
+			xdo_click_window(xdo, CURRENTWINDOW, button);
 		}
 
 		uint64_t execution_time = millis() - begin;
