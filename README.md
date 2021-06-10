@@ -38,7 +38,7 @@ You can compile and install this program with the following commands:
 
 	$ cd build
 
-	$ cmake --config Release ..
+	$ cmake -DCMAKE_BUILD_TYPE=Release ..
 
 	$ make install
 
