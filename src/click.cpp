@@ -32,13 +32,10 @@ int click(int button, uint64_t delay, uint64_t position_check_time)
 		int x;
 		int y;
 	} before, after;
+	bool hasBefore = false;
 
 	// Now we're going to wait for a mouse click.
 	xdo_select_window_with_click(xdo, &ignore_window);
-
-	// We got a click so let's get the coordinates of the mouse. This will
-	// be the position where we're going to dispatch mouse clicks.
-	xdo_get_mouse_location(xdo, &before.x, &before.y, &ignore_int);
 
 	// Counts how many milliseconds have passed since the last time the
 	// mouse position was checked.
@@ -50,11 +47,18 @@ int click(int button, uint64_t delay, uint64_t position_check_time)
 
 		// Checks mouse position.
 		if (position_check_counter > position_check_time) {
-			xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
+			if (!hasBefore) {
+				// Delay has been passed, let's get the coordinates of the mouse to detect movement.
+				xdo_get_mouse_location(xdo, &before.x, &before.y, &ignore_int);
 
-			if (before.x != after.x || before.y != after.y) {
-				// The mouse moved away so that's our queue to stop.
-				break;
+				hasBefore = true;
+			} else {
+				xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
+
+				if (before.x != after.x || before.y != after.y) {
+					// The mouse moved away so that's our queue to stop.
+					break;
+				}
 			}
 		}
 
