@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
 #include "click.hpp"
@@ -15,10 +16,11 @@ static int button = 1;
 static uint64_t delay = 50;
 
 /*
- * The amount of pixels you can move before the clicker turns off.
+ * The amount of pixels you can move before it performs the on-leave-area
+ * action.
  * seraph is pretty cool.
  */
-static int movement_treshold = 0;
+static int area = 0;
 
 /*
  * How often to check for mouse position changes. This is a costly operation
@@ -40,7 +42,8 @@ int main(int argc, char *argv[])
 		("version,v", "show version and exit")
 		("button", boost::program_options::value<std::string>()->default_value("left"), "which button to press")
 		("delay", boost::program_options::value<int>()->default_value(delay), "delay between clicks, in milliseconds")
-		("movement-threshold", boost::program_options::value<int>()->default_value(movement_treshold), "the amount of pixels you can move before the clicker turns off")
+		("on-leave-area", boost::program_options::value<std::string>()->default_value("exit"), "the action to perform on leaving the click area (exit, pause)")
+		("area", boost::program_options::value<int>()->default_value(area), "the amount of pixels you can move before it performs the on-leave-area action")
 		("position-check-delay", boost::program_options::value<int>()->default_value(position_check_delay), "delay between checking mouse position changes, in milliseconds");
 
 	boost::program_options::variables_map vm;
@@ -110,8 +113,8 @@ int main(int argc, char *argv[])
 		position_check_delay = requested;
 	}
 
-	if (vm.count("movement-threshold")) {
-		int requested = vm.at("movement-threshold").as<int>();
+	if (vm.count("area")) {
+		int requested = vm.at("area").as<int>();
 
 		if (requested < 0) {
 			std::cerr << "Movement threshold must be a positive number." << std::endl;
@@ -123,10 +126,32 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 
-		movement_treshold = requested;
+		area = requested;
 	}
 
-	click(button, delay, position_check_delay, movement_treshold);
+	ClickOnLeaveArea click_on_leave_area;
+
+	if (vm.count("on-leave-area")) {
+		std::string requested = vm.at("on-leave-area").as<std::string>();
+
+		boost::algorithm::to_lower(requested);
+
+		if (requested == "exit") {
+			click_on_leave_area = ClickOnLeaveArea::Exit;
+		} else if (requested == "pause") {
+			click_on_leave_area = ClickOnLeaveArea::Pause;
+
+			if (area == 0) {
+				std::cerr << "You must specify the size of the area." << std::endl;
+				return EXIT_FAILURE;
+			}
+		} else {
+			std::cerr << "Option for on-leave-area not recognized." << std::endl;
+			return EXIT_FAILURE;
+		}
+	}
+
+	click(button, delay, position_check_delay, area, click_on_leave_area);
 
 	return EXIT_SUCCESS;
 }

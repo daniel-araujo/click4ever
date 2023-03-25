@@ -10,8 +10,27 @@ extern "C" {
 
 #include "time_utils.hpp"
 
-int click(int button, uint64_t delay, uint64_t position_check_time, int movement_treshold)
+#include "click.hpp"
+
+static inline void smartsleep(uint64_t begin, uint64_t delay)
 {
+	uint64_t execution_time = millis() - begin;
+
+	if (execution_time < delay) {
+		uint64_t remaining_time = delay - execution_time;
+		usleep(remaining_time * 1000);
+	} else {
+		// No need to sleep.
+	}
+}
+
+int click(
+  int button,
+  uint64_t delay,
+  uint64_t position_check_time,
+  int area,
+  ClickOnLeaveArea click_on_leave_area
+) {
 	// Variables used as output parameters whose values we're not
 	// interested in.
 	int ignore_int;
@@ -45,6 +64,8 @@ int click(int button, uint64_t delay, uint64_t position_check_time, int movement
 	// mouse position was checked.
 	double position_check_counter = 0;
 
+	bool is_inside = true;
+
 	// Begin the process of dispatching mouse clicks quickly in succession.
 	for (;;) {
 		uint64_t begin = millis();
@@ -58,26 +79,24 @@ int click(int button, uint64_t delay, uint64_t position_check_time, int movement
 
 			int distance = std::sqrt(std::pow(x_diff, 2) + std::pow(y_diff, 2));
 
-			if (distance > movement_treshold) {
-				// The mouse moved away so that's our queue to stop.
-				break;
-			}
+			is_inside = distance <= area;
 		}
 
-		// Performs mouse click.
-		{
+		if (is_inside) {
+			// Performs the mouse click.
 			xdo_click_window(xdo, CURRENTWINDOW, button);
-		}
 
-		uint64_t execution_time = millis() - begin;
+			// Sleep until the next turn.
+			smartsleep(begin, delay);
+		} else {
+			// The mouse moved away so that's our queue to stop... or is it?
 
-		// Delay
-		{
-			if (execution_time < delay) {
-				uint64_t remaining_time = delay - execution_time;
-				usleep(remaining_time * 1000);
-			} else {
-				// No need to sleep.
+			if (click_on_leave_area == ClickOnLeaveArea::Exit) {
+				// It is.
+				break;
+			} else if (click_on_leave_area == ClickOnLeaveArea::Pause) {
+				// Sleep until the next check.
+				smartsleep(begin, position_check_time);
 			}
 		}
 
