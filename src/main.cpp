@@ -15,6 +15,12 @@ static int button = 1;
 static uint64_t delay = 50;
 
 /*
+ * The amount of pixels you can move before the clicker turns off.
+ * seraph is pretty cool.
+ */
+static int movement_treshold = 0;
+
+/*
  * How often to check for mouse position changes. This is a costly operation
  * and in many cases is not important to be checked as often as clicking is.
  * It's in milliseconds.
@@ -34,6 +40,7 @@ int main(int argc, char *argv[])
 		("version,v", "show version and exit")
 		("button", boost::program_options::value<std::string>()->default_value("left"), "which button to press")
 		("delay", boost::program_options::value<int>()->default_value(delay), "delay between clicks, in milliseconds")
+		("movement-threshold", boost::program_options::value<int>()->default_value(movement_treshold), "the amount of pixels you can move before the clicker turns off")
 		("position-check-delay", boost::program_options::value<int>()->default_value(position_check_delay), "delay between checking mouse position changes, in milliseconds");
 
 	boost::program_options::variables_map vm;
@@ -103,7 +110,23 @@ int main(int argc, char *argv[])
 		position_check_delay = requested;
 	}
 
-	click(button, delay, position_check_delay);
+	if (vm.count("movement-threshold")) {
+		int requested = vm.at("movement-threshold").as<int>();
+
+		if (requested < 0) {
+			std::cerr << "Movement threshold must be a positive number." << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		if (requested > 32000) {
+			std::cerr << "Movement threshold is not allowed to be greater than 32 thousand." << std::endl;
+			return EXIT_FAILURE;
+		}
+
+		movement_treshold = requested;
+	}
+
+	click(button, delay, position_check_delay, movement_treshold);
 
 	return EXIT_SUCCESS;
 }

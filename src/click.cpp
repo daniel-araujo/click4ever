@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cmath>
 
 #include <boost/program_options.hpp>
 
@@ -9,7 +10,7 @@ extern "C" {
 
 #include "time_utils.hpp"
 
-int click(int button, uint64_t delay, uint64_t position_check_time)
+int click(int button, uint64_t delay, uint64_t position_check_time, int movement_treshold)
 {
 	// Variables used as output parameters whose values we're not
 	// interested in.
@@ -52,7 +53,12 @@ int click(int button, uint64_t delay, uint64_t position_check_time)
 		if (position_check_counter > position_check_time) {
 			xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
 
-			if (before.x != after.x || before.y != after.y) {
+			int x_diff = after.x - before.x;
+			int y_diff = after.y - before.y;
+
+			int distance = std::sqrt(std::pow(x_diff, 2) + std::pow(y_diff, 2));
+
+			if (distance > movement_treshold) {
 				// The mouse moved away so that's our queue to stop.
 				break;
 			}
