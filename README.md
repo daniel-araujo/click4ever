@@ -1,21 +1,39 @@
 # click4ever
 
-An auto clicker for Linux running X11. A program that generates a lot of mouse
-clicks per second at the current position of the mouse until you move it away.
+An auto clicker for Linux running X11. Generates mouse clicks at a specified
+location. Can pause when moving away and resume when going back.
 
 
 ## Usage
 
-All you have to do is run the program:
+Running the program with no options:
 
 	$ click4ever
 
-It will wait for you to make the first click before it starts dispatching mouse
-clicks. This gives you time to move the pointer to your desired target. It stops
-once you move the mouse again.
+Waits for you to make the first click before it dispatches mouse clicks.
+This gives you time to move the pointer to your desired location. The program
+stops once you move the pointer away.
 
 If your Desktop Environment supports hotkeys, you can assign a hotkey (WIN+C for
 example) to run the program for you.
+
+You can have it pause instead of exiting the program:
+
+	$ click4ever --on-leave-area=pause --area=10
+
+This will stop clicking when the pointer leaves the area around the first click. It will resume clicking when the pointer returns to the area. You will have to manually stop the program.
+
+You can choose which button to press:
+
+	$ click4ever --button=middle
+
+Set a delay, in milliseconds, between clicks:
+
+	$ click4ever --delay=10
+
+For more options run:
+
+	$ click4ever --help
 
 
 ## Installation
@@ -41,6 +59,14 @@ You can compile and install this program with the following commands:
 	$ cmake -DCMAKE_BUILD_TYPE=Release ..
 
 	$ make install
+
+
+## Changelog
+
+### 1.3.0 (2023-03-26)
+
+- Added `--on-leave-area`: the action to perform on leaving the click area.
+- Added `--area`: the amount of pixels you can move before it performs the on-leave-area action.
 
 
 ## Contributing
