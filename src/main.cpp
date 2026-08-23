@@ -89,8 +89,14 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 
-		if (requested > (1000 * 60 * 24 * 7)) {
-			std::cerr << "The maximum allowed value for delay is 7 days." << std::endl;
+		// 71 minutes stays under the ~71.6 minutes (2^32 - 1 microseconds)
+		// that usleep() in click.cpp can safely take, since remaining_time
+		// is multiplied by 1000 there and passed to usleep(), whose
+		// argument is commonly a 32-bit useconds_t. Going over risks that
+		// multiplication overflowing and sleeping for far less time than
+		// requested.
+		if (requested > (1000 * 60 * 71)) {
+			std::cerr << "The maximum allowed value for delay is 71 minutes." << std::endl;
 			return EXIT_FAILURE;
 		}
 
@@ -105,8 +111,10 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 
-		if (requested > (1000 * 60 * 24 * 7)) {
-			std::cerr << "The maximum allowed value for position check delay is 7 days." << std::endl;
+		// See the equivalent check for "delay" above for why this cap is
+		// what it is.
+		if (requested > (1000 * 60 * 71)) {
+			std::cerr << "The maximum allowed value for position check delay is 71 minutes." << std::endl;
 			return EXIT_FAILURE;
 		}
 
