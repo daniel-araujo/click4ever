@@ -73,6 +73,7 @@ int click(
 		// Checks mouse position.
 		if (position_check_counter > position_check_time) {
 			xdo_get_mouse_location(xdo, &after.x, &after.y, &ignore_int);
+			position_check_counter = 0;
 
 			int x_diff = after.x - before.x;
 			int y_diff = after.y - before.y;
