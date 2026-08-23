@@ -151,7 +151,9 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	click(button, delay, position_check_delay, area, click_on_leave_area);
+	if (click(button, delay, position_check_delay, area, click_on_leave_area) != 0) {
+		return EXIT_FAILURE;
+	}
 
 	return EXIT_SUCCESS;
 }
