@@ -63,6 +63,12 @@ You can compile and install this program with the following commands:
 
 ## Changelog
 
+### 1.3.1 (2026-08-23)
+
+- Fixed the mouse position check running on every iteration instead of only every `--position-check-delay` milliseconds.
+- The program now exits with a non-zero status if it fails to connect to the display.
+- Restricted the maximum allowed `--delay` and `--position-check-delay` to 71 minutes to avoid an overflow in the click loop's sleep call.
+
 ### 1.3.0 (2023-03-26)
 
 - Added `--on-leave-area`: the action to perform on leaving the click area.
